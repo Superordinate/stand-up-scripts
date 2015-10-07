@@ -1,0 +1,48 @@
+./bin/mesos-master.sh --help --cluster=onahorsie --work_dir=/var/lib/mesos
+
+weave run -d \
+-e MESOS_HOSTNAME=mesos-master \
+-e MESOS_IP=mesos-master \
+-e MESOS_QUORUM=1 \
+-e MESOS_ZK=zk://zookeeper:2181/mesos \
+--name mesos-master --restart always mesoscloud/mesos-master:0.24.1-ubuntu-14.04
+
+weave run -d \
+-e MYID=1 \
+-e SERVERS=zookeeper \
+--name=zookeeper  --restart=always mesoscloud/zookeeper:3.4.6-ubuntu-14.04
+
+weave run -d \
+-e MARATHON_HOSTNAME=marathon  \
+-e MARATHON_HTTPS_ADDRESS=marathon  \
+-e MARATHON_HTTP_ADDRESS=marathon  \
+-e MARATHON_MASTER=zk://zookeeper:2181/mesos \
+-e MARATHON_ZK=zk://zookeeper:2181/marathon \
+--name marathon --restart always mesoscloud/marathon:0.11.0-ubuntu-15.04
+
+weave run -d \
+-e MESOS_HOSTNAME=0.0.0.0 \
+-e MESOS_IP=0.0.0.0 \
+-e MESOS_MASTER=zk://mesos-master:2181/mesos \
+-v /sys/fs/cgroup:/sys/fs/cgroup \
+-v /var/run/docker.sock:/var/run/docker.sock \
+--name slave --restart always \
+mesoscloud/mesos-slave:0.24.1-centos-7
+
+
+weave launch-proxy  [-H <endpoint>] [--with-dns | --without-dns]
+                      [--no-default-ipalloc] [--no-rewrite-hosts]
+                      [--hostname-from-label <labelkey>]
+                      [--hostname-match <regexp>]
+                      [--hostname-replacement <replacement>]
+                      [--rewrite-inspect]
+
+weave run
+
+
+                      COUNTER=0
+                              while [  $COUNTER -lt 50 ]; do
+                          weave run -d -e MYSQL_ROOT_PASSWORD=password --name ep_mysql mysql
+                          weave run -d --link=ep_mysql:mysql -p 9001:9001 tvelocity/etherpad-lite
+                                  let COUNTER=COUNTER+1
+                              done
