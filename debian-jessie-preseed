@@ -6,8 +6,10 @@
 # tar xvf netboot.tar.gz
 # mv netboot netboot-debian-stretch
 # cd netboot-debian-stretch
-# Hoang, can you please replace this line with the command that people can use to add this preseed to their initrd.gz?
+# Hoang, can you please replace this line with the command that people can use to add this preseed to their initrd.gz? <- this line :)
 # pixiecore -kernel=linux -initrd=initrd.gz
+
+
 # Preseeding only locale sets language, country and locale.
 d-i debian-installer/locale string en_US
 
@@ -23,7 +25,6 @@ d-i debian-installer/locale string en_US
 d-i keymap select us
 # d-i keyboard-configuration/toggle select No toggling
 
-### Network configuration
 # Disable network configuration entirely. This is useful for cdrom
 # installations on non-networked devices where the network questions,
 # warning and long timeouts are a nuisance.
@@ -38,7 +39,7 @@ d-i netcfg/choose_interface select auto
 
 # To set a different link detection timeout (default is 3 seconds).
 # Values are interpreted as seconds.
-#d-i netcfg/link_detection_timeout string 10
+#d-i netcfg/link_wait_timeout string 10
 
 # If you have a slow dhcp server and the installer times out waiting for
 # it, this might be useful.
@@ -61,7 +62,7 @@ d-i netcfg/choose_interface select auto
 #d-i netcfg/get_ipaddress string 192.168.1.42
 #d-i netcfg/get_netmask string 255.255.255.0
 #d-i netcfg/get_gateway string 192.168.1.1
-d-i netcfg/get_nameservers string 8.8.8.8
+#d-i netcfg/get_nameservers string 8.8.8.8
 #d-i netcfg/confirm_static boolean true
 #
 # IPv6 example
@@ -104,7 +105,7 @@ d-i netcfg/wireless_wep string
 ### Mirror settings
 # If you select ftp, the mirror/country string does not need to be set.
 #d-i mirror/protocol string ftp
-d-i mirror/country string manual
+d-i mirror/country string vn
 d-i mirror/http/hostname string opensource.xtdv.net
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
@@ -122,8 +123,8 @@ d-i mirror/http/proxy string
 #d-i passwd/make-user boolean false
 
 # Root password, either in clear text
-d-i passwd/root-password password pacopower
-d-i passwd/root-password-again password pacopower
+#d-i passwd/root-password password r00tme
+#d-i passwd/root-password-again password r00tme
 # or encrypted using an MD5 hash.
 #d-i passwd/root-password-crypted password [MD5 hash]
 
@@ -292,7 +293,7 @@ d-i partman/confirm_nooverwrite boolean true
 
 # The kernel image (meta) package to be installed; "none" can be used if no
 # kernel is to be installed.
-#d-i base-installer/kernel/image string linux-image-486
+d-i base-installer/kernel/image string linux-image-amd64
 
 ### Apt setup
 # You can choose to install non-free and contrib software.
@@ -309,8 +310,9 @@ d-i apt-setup/contrib boolean true
 #d-i apt-setup/local0/repository string \
 #       http://local.server/debian stable main
 #d-i apt-setup/local0/comment string local server
+
 # Enable deb-src lines
-#d-i apt-setup/local0/source boolean true
+d-i apt-setup/local0/source boolean true
 # URL to the public key of the local repository; you must provide a key or
 # apt will complain about the unauthenticated repository and so the
 # sources.list line will be left commented out
@@ -325,13 +327,17 @@ d-i debian-installer/allow_unauthenticated boolean true
 #tasksel tasksel/first multiselect standard, web-server
 # If the desktop task is selected, install the kde and xfce desktops
 # instead of the default gnome desktop.
-tasksel tasksel/server ssh
+tasksel tasksel/first multiselect ssh-server standard 
 
 # Individual additional packages to install
-d-i pkgsel/include string openssh-server build-essential git python python3 python-pip openjdk-8-jdk
+d-i pkgsel/include string openssh-server build-essential git curl python python3 python-pip openjdk-8-jdk software-properties-common apt-transport-https 
 # Whether to upgrade packages after debootstrap.
 # Allowed values: none, safe-upgrade, full-upgrade
 d-i pkgsel/upgrade select full-upgrade
+
+#######SHELL CUSTOMIZATION, DOCKER, WEAVE, MESOS SLAVES: MUCHOS IMPORTANTE HUEVOS RANCHEROS AQUI!####################
+d-i preseed/late_command string apt-install fish; in-target chsh -s /bin/fish; curl -sSL https://get.docker.com/ | sh; curl -L git.io/weave -o /usr/local/bin/weave; chmod a+x /usr/local/bin/weave; weave launch 104.155.33.99 130.211.109.79; eval $(weave env);
+
 
 # Some versions of the installer can report back on what software you have
 # installed, and what software you use. The default is not to report back,
@@ -389,4 +395,6 @@ d-i debian-installer/exit/poweroff boolean true
 # still a usable /target directory. You can chroot to /target and use it
 # directly, or use the apt-install and in-target commands to easily install
 # packages and run commands in the target system.
-#d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
+
+
+
