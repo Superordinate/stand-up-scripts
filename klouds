@@ -1,0 +1,39 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          klouds
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: klouds
+# Description:       this will register a node on klouds weave network
+### END INIT INFO
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting klouds "
+
+    # example 1 - system service
+    
+    /usr/local/bin/weave launch 104.155.33.99 130.211.109.79
+    
+    # example 2 - run script as user
+    su --login root --command "/root/kloudsshellscript"
+
+    ;;
+  stop)
+    echo "Stopping klouds"
+
+    # example 1
+    # /usr/bin/klouds --config /etc/foo.conf stop
+
+    ;;
+  *)
+    echo "Usage: /etc/init.d/klouds {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

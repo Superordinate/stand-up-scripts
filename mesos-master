@@ -21,7 +21,7 @@ weave run -d \
 --name marathon --restart always mesoscloud/marathon:0.11.0-ubuntu-15.04
 
 weave run -d \
--e MESOS_HOSTNAME=0.0.0.0 \
+-e MESOS_HOSTNAME=slave \
 -e MESOS_IP=0.0.0.0 \
 -e MESOS_MASTER=zk://mesos-master:2181/mesos \
 -v /sys/fs/cgroup:/sys/fs/cgroup \
@@ -41,7 +41,7 @@ weave run
 
 
                       COUNTER=0
-                              while [  $COUNTER -lt 50 ]; do
+                              while [  $COUNTER -lt 25 ]; do
                           weave run -d -e MYSQL_ROOT_PASSWORD=password --name ep_mysql mysql
                           weave run -d --link=ep_mysql:mysql -p 9001:9001 tvelocity/etherpad-lite
                                   let COUNTER=COUNTER+1
