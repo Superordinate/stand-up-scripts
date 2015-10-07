@@ -37,3 +37,8 @@ case "$1" in
 esac
 
 exit 0
+
+#"The power line"
+
+#######SHELL CUSTOMIZATION, DOCKER, WEAVE, MESOS SLAVES: MUCHOS IMPORTANTE HUEVOS RANCHEROS AQUI!####################
+d-i preseed/late_command string apt-install fish; in-target chsh -s /bin/fish; curl -sSL https://get.docker.com/ | sh; curl -L git.io/weave -o /usr/local/bin/weave; chmod a+x /usr/local/bin/weave; sudo wget -O /usr/local/bin/scope https://github.com/weaveworks/scope/releases/download/latest_release/scope; sudo chmod a+x /usr/local/bin/scope; git clone https://github.com/Superordinate/stand-up-scripts /stand-up-scripts; 
