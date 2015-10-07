@@ -1,5 +1,13 @@
 #### Contents of the preconfiguration file (for wheezy)
 ### Localization
+# when using this preseed file, you'll want to download:  http://ftp.nl.debian.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/netboot.tar.gz
+# like this:
+# wget http://ftp.nl.debian.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/netboot.tar.gz
+# tar xvf netboot.tar.gz
+# mv netboot netboot-debian-stretch
+# cd netboot-debian-stretch
+# Hoang, can you please replace this line with the command that people can use to add this preseed to their initrd.gz?
+# pixiecore -kernel=linux -initrd=initrd.gz
 # Preseeding only locale sets language, country and locale.
 d-i debian-installer/locale string en_US
 
